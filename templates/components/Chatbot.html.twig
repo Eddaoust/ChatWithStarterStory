@@ -1,0 +1,91 @@
+<div{{ attributes.defaults({
+    class: 'flex-1 flex flex-col bg-base-100 overflow-hidden',
+    'data-controller': 'chatbot',
+    'data-chatbot-is-loading-value': isLoading ? 'true' : 'false'
+}) }}>
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto p-4" id="chat-messages">
+        {% for message in messages %}
+            {% if message.type == 'user' %}
+                <div class="chat chat-end my-2">
+                    <div class="chat-bubble chat-bubble-secondary">
+                        {{ message.content }}
+                    </div>
+                </div>
+            {% else %}
+                <div class="chat chat-start my-2">
+                    <div class="chat-bubble chat-bubble-primary">
+                        <div>{{ message.content|nl2br }}</div>
+
+                        {% if message.videos|length > 0 %}
+                            <div class="mt-4">
+                                <p class="font-medium text-sm mb-2">Relevant Videos:</p>
+                                <div class="flex flex-col gap-2">
+                                    {% for video in message.videos %}
+                                        <div class="flex bg-base-300 rounded-lg p-2">
+                                            <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="video-thumbnail rounded mr-2">
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium">{{ video.title }}</p>
+                                                <a href="{{ video.timestampUrl }}" target="_blank" class="btn btn-xs btn-primary mt-1">
+                                                    Watch Video
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if isLoading %}
+            <div class="chat chat-start my-2" data-chatbot-target="loadingIndicator">
+                <div class="chat-bubble chat-bubble-primary flex items-center gap-2">
+                    <span class="loading loading-dots loading-sm"></span>
+                    <span>Thinking...</span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Common Questions -->
+    <div class="bg-base-200 p-3 flex flex-wrap gap-2 justify-center">
+        <button class="btn btn-sm btn-outline" data-question="What are some successful solo founder stories?">
+            Solo founder stories
+        </button>
+        <button class="btn btn-sm btn-outline" data-question="Tell me about bootstrapped SaaS businesses">
+            Bootstrapped SaaS
+        </button>
+        <button class="btn btn-sm btn-outline" data-question="What are some profitable side projects?">
+            Profitable side projects
+        </button>
+        <button class="btn btn-sm btn-outline" data-question="How do founders validate their business ideas?">
+            Idea validation
+        </button>
+    </div>
+
+    <!-- Input Area -->
+    <div class="p-4 bg-base-100 border-t border-base-300">
+        {{ form_start(form, {
+            attr: {
+                'data-action': 'live#action:prevent',
+                'data-live-action-param': 'save',
+                'class': 'flex gap-2'
+            }
+        }) }}
+            {{ form_widget(form.question, {
+                attr: {
+                    'class': 'input input-bordered flex-grow',
+                    'placeholder': 'Ask a question...'
+                }
+            })}}
+            <button class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                </svg>
+            </button>
+        {{ form_end(form) }}
+    </div>
+</div>

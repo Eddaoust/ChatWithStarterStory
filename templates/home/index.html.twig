@@ -1,0 +1,283 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat with Starter Story{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .chat-height {
+            height: calc(100vh - 200px);
+        }
+        .video-thumbnail {
+            width: 120px;
+            height: 68px;
+            object-fit: cover;
+        }
+        .sidebar-height {
+            height: calc(100vh - 100px);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="flex h-screen bg-base-100">
+        <!-- Sidebar with Recent Q&As -->
+        <div class="w-80 bg-base-200 p-4 border-r border-base-300 hidden md:block">
+            <h2 class="text-xl font-bold mb-4">Recent Questions</h2>
+            <div class="sidebar-height overflow-y-auto">
+                {% if recentQuestions is empty %}
+                    <p class="text-gray-500 text-sm">No questions yet</p>
+                {% else %}
+                    {% for question in recentQuestions %}
+                        <div class="mb-4 p-3 bg-base-300 rounded-lg">
+                            <p class="font-medium text-sm">{{ question.question }}</p>
+                            {% if question.response %}
+                                <p class="text-xs mt-1 text-gray-500">{{ question.response.answer|length > 100 ? question.response.answer|slice(0, 100) ~ '...' : question.response.answer }}</p>
+                                <p class="text-xs mt-1 text-gray-400">{{ question.createdAt|date('M d, Y H:i') }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col">
+            <!-- Header -->
+            <div class="text-center py-4 border-b border-base-300">
+                <h1 class="text-2xl font-bold text-primary">Chat with Starter Story</h1>
+                <p class="text-gray-600">Ask questions about Starter Story YouTube videos</p>
+            </div>
+
+            <twig:Chatbot/>
+            <!-- Chat Container -->
+            {#<div class="flex-1 flex flex-col bg-base-100 overflow-hidden">
+                <!-- Chat Messages -->
+                <div class="flex-1 overflow-y-auto p-4" id="chat-messages">
+                    <!-- Welcome Message -->
+                    <div class="chat chat-start">
+                        <div class="chat-bubble chat-bubble-primary">
+                            <p>Hello! I'm your Starter Story assistant. Ask me anything about Starter Story YouTube videos!</p>
+                        </div>
+                    </div>
+
+                    <!-- Messages will be dynamically added here -->
+                </div>
+
+                <!-- Common Questions -->
+                <div class="bg-base-200 p-3 flex flex-wrap gap-2 justify-center">
+                    <button class="btn btn-sm btn-outline" data-question="What are some successful solo founder stories?">
+                        Solo founder stories
+                    </button>
+                    <button class="btn btn-sm btn-outline" data-question="Tell me about bootstrapped SaaS businesses">
+                        Bootstrapped SaaS
+                    </button>
+                    <button class="btn btn-sm btn-outline" data-question="What are some profitable side projects?">
+                        Profitable side projects
+                    </button>
+                    <button class="btn btn-sm btn-outline" data-question="How do founders validate their business ideas?">
+                        Idea validation
+                    </button>
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-4 bg-base-100 border-t border-base-300">
+                    <form id="chat-form" class="flex gap-2">
+                        <input
+                            type="text"
+                            id="user-input"
+                            class="input input-bordered flex-grow"
+                            placeholder="Ask a question..."
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>#}
+        </div>
+    </div>
+
+        {#<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const chatForm = document.getElementById('chat-form');
+                const userInput = document.getElementById('user-input');
+                const chatMessages = document.getElementById('chat-messages');
+                const commonQuestions = document.querySelectorAll('[data-question]');
+                let isWaitingForResponse = false;
+
+                // Handle form submission
+                chatForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const message = userInput.value.trim();
+                    if (message && !isWaitingForResponse) {
+                        sendMessage(message);
+                    }
+                });
+
+                // Handle common question buttons
+                commonQuestions.forEach(button => {
+                    button.addEventListener('click', function() {
+                        if (!isWaitingForResponse) {
+                            const question = this.getAttribute('data-question');
+                            userInput.value = question;
+                            chatForm.dispatchEvent(new Event('submit'));
+                        }
+                    });
+                });
+
+                // Function to send message to backend
+                function sendMessage(message) {
+                    addUserMessage(message);
+                    userInput.value = '';
+                    isWaitingForResponse = true;
+
+                    // Add loading indicator
+                    const loadingId = addLoadingIndicator();
+
+                    // Call the backend API
+                    fetch('/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ question: message }),
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Remove loading indicator
+                            removeLoadingIndicator(loadingId);
+
+                            // Add bot response
+                            addBotResponse(data.answer, data.videos);
+                            isWaitingForResponse = false;
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            // Remove loading indicator
+                            removeLoadingIndicator(loadingId);
+
+                            // Add error message
+                            addBotMessage("Sorry, there was an error processing your request. Please try again.");
+                            isWaitingForResponse = false;
+                        });
+                }
+
+                // Function to add a user message to the chat
+                function addUserMessage(message) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'chat chat-end my-2';
+                    messageDiv.innerHTML = `
+                        <div class="chat-bubble chat-bubble-secondary">
+                            ${escapeHtml(message)}
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Function to add a loading indicator
+                function addLoadingIndicator() {
+                    const id = 'loading-' + Date.now();
+                    const loadingDiv = document.createElement('div');
+                    loadingDiv.id = id;
+                    loadingDiv.className = 'chat chat-start my-2';
+                    loadingDiv.innerHTML = `
+                        <div class="chat-bubble chat-bubble-primary flex items-center gap-2">
+                            <span class="loading loading-dots loading-sm"></span>
+                            <span>Thinking...</span>
+                        </div>
+                    `;
+                    chatMessages.appendChild(loadingDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    return id;
+                }
+
+                // Function to remove loading indicator
+                function removeLoadingIndicator(id) {
+                    const loadingDiv = document.getElementById(id);
+                    if (loadingDiv) {
+                        loadingDiv.remove();
+                    }
+                }
+
+                // Function to add a bot response with videos
+                function addBotResponse(message, videos) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'chat chat-start my-2';
+
+                    let videosHtml = '';
+                    if (videos && videos.length > 0) {
+                        videosHtml = `
+                            <div class="mt-4">
+                                <p class="font-medium text-sm mb-2">Relevant Videos:</p>
+                                <div class="flex flex-col gap-2">
+                        `;
+
+                        videos.forEach(video => {
+                            videosHtml += `
+                                <div class="flex bg-base-300 rounded-lg p-2">
+                                    <img src="${escapeHtml(video.thumbnail)}" alt="${escapeHtml(video.title)}" class="video-thumbnail rounded mr-2">
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">${escapeHtml(video.title)}</p>
+                                        <a href="${escapeHtml(video.timestampUrl)}" target="_blank" class="btn btn-xs btn-primary mt-1">
+                                            Watch Video
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        });
+
+                        videosHtml += `
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    messageDiv.innerHTML = `
+                        <div class="chat-bubble chat-bubble-primary">
+                            <div>${escapeHtml(message).replace(/\n/g, '<br>')}</div>
+                            ${videosHtml}
+                        </div>
+                    `;
+
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Function to add a simple bot message
+                function addBotMessage(message) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'chat chat-start my-2';
+                    messageDiv.innerHTML = `
+                        <div class="chat-bubble chat-bubble-primary">
+                            ${escapeHtml(message).replace(/\n/g, '<br>')}
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+
+                // Helper function to escape HTML
+                function escapeHtml(unsafe) {
+                    if (unsafe === undefined || unsafe === null) {
+                        return '';
+                    }
+                    return String(unsafe)
+                        .replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+                }
+            });
+        </script>#}
+
+{% endblock %}
