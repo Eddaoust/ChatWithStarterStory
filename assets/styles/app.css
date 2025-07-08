@@ -1,2 +1,6 @@
 @import "tailwindcss" source(none);
 @source "../../templates/**/*.html.twig";
+
+.sidebar-height {
+    height: calc(100vh - 200px);
+}

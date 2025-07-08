@@ -25,7 +25,7 @@
                                         <div class="flex bg-base-300 rounded-lg p-2">
                                             <img src="{{ video.thumbnail }}" alt="{{ video.title }}" class="video-thumbnail rounded mr-2">
                                             <div class="flex-1">
-                                                <p class="text-sm font-medium">{{ video.title }}</p>
+                                                <p class="text-sm font-medium text-base-content">{{ video.title }}</p>
                                                 <a href="{{ video.timestampUrl }}" target="_blank" class="btn btn-xs btn-primary mt-1">
                                                     Watch Video
                                                 </a>
@@ -48,22 +48,6 @@
                 </div>
             </div>
         {% endif %}
-    </div>
-
-    <!-- Common Questions -->
-    <div class="bg-base-200 p-3 flex flex-wrap gap-2 justify-center">
-        <button class="btn btn-sm btn-outline" data-question="What are some successful solo founder stories?">
-            Solo founder stories
-        </button>
-        <button class="btn btn-sm btn-outline" data-question="Tell me about bootstrapped SaaS businesses">
-            Bootstrapped SaaS
-        </button>
-        <button class="btn btn-sm btn-outline" data-question="What are some profitable side projects?">
-            Profitable side projects
-        </button>
-        <button class="btn btn-sm btn-outline" data-question="How do founders validate their business ideas?">
-            Idea validation
-        </button>
     </div>
 
     <!-- Input Area -->

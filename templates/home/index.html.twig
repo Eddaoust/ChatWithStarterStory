@@ -2,22 +2,6 @@
 
 {% block title %}Chat with Starter Story{% endblock %}
 
-{% block stylesheets %}
-    <style>
-        .chat-height {
-            height: calc(100vh - 200px);
-        }
-        .video-thumbnail {
-            width: 120px;
-            height: 68px;
-            object-fit: cover;
-        }
-        .sidebar-height {
-            height: calc(100vh - 100px);
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
     <div class="flex h-screen bg-base-100">
         <!-- Sidebar with Recent Q&As -->
@@ -38,6 +22,21 @@
                     {% endfor %}
                 {% endif %}
             </div>
+            <div class="divider"></div>
+            <div class="flex flex-col justify-between">
+                <div class="flex gap-2 justify-center">
+                    <a href="https://github.com/Eddaoust/ChatWithStarterStory" target="_blank" class="btn btn-circle">
+                        <twig:ux:icon name="mingcute:github-fill" class="h-6 w-6" />
+                    </a>
+                    <a href="https://eddaoust.com/" target="_blank" class="btn btn-circle">
+                        <img src="{{ asset('logo-black.png') }}" alt="Eddaoust logo" class="h-8 w-8">
+                    </a>
+                </div>
+                <div class="flex gap-2 justify-center mt-6">
+                    <a class="link link-hover text-sm">Legal</a>
+                    <a class="link link-hover text-sm">Cookie</a>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -45,11 +44,23 @@
             <!-- Header -->
             <div class="text-center py-4 border-b border-base-300">
                 <h1 class="text-2xl font-bold text-primary">Chat with Starter Story</h1>
-                <p class="text-gray-600">Ask questions about Starter Story YouTube videos</p>
+                <p class="text-gray-600">Ask questions about <a href="https://www.youtube.com/@starterstory" target="_blank">Starter Story YouTube</a> videos</p>
             </div>
 
             <twig:Chatbot/>
         </div>
     </div>
+
+    <footer class="footer sm:footer-horizontal bg-base-300 items-center p-4 md:hidden block">
+        <aside class="grid-flow-col items-center">
+            <a href="https://eddaoust.com/" target="_blank">
+                <img src="{{ asset('logo-black.png') }}" alt="Eddaoust logo" class="h-12 w-12">
+            </a>
+            <div class="flex gap-2 justify-center">
+                <a class="link link-hover text-sm">Legal</a>
+                <a class="link link-hover text-sm">Cookie</a>
+            </div>
+        </aside>
+    </footer>
 
 {% endblock %}
