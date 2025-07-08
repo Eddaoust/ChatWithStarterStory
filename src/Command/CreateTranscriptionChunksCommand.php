@@ -70,8 +70,8 @@ class CreateTranscriptionChunksCommand extends Command
                     $transcriptionChunk = (new TranscriptionChunk)
                             ->setVideo($video)
                             ->setContent($chunk['text'])
-                            ->setVideoOffset($chunk['offset'])
-                            ->setDuration($chunk['duration'])
+                            ->setVideoOffset(is_float($chunk['offset']) ? (int) round($chunk['offset']) : $chunk['offset'])
+                            ->setDuration(is_float($chunk['duration']) ? (int) round($chunk['duration']) : $chunk['duration'])
                             ->setLang($chunk['lang'] ?? $transcriptionData['lang']);
 
                     $io->note(sprintf('Create transcription chunk for video ID %s', $videoId));

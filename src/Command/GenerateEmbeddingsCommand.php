@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class GenerateEmbeddingsCommand extends Command
 {
-    private const BATCH_SIZE = 25;
+    private const BATCH_SIZE = 100;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

@@ -114,7 +114,7 @@ This command:
 
 ### Data Flow
 ```
-User Question → Embedding → Vector Search → Context Building → LLM Query → Response + Video Links
+User Question → Embedding → Vector Search → Context Building →docker exec mariadb mysqldump -u root -p database > database_dump.sql LLM Query → Response + Video Links
 ```
 
 ## 🔧 Development Commands
