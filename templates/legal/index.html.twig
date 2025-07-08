@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}legal{% endblock %}
+
+{% block body %}
+    <div class="container max-w-4xl mx-auto grid grid-cols-1 gap-4 py-20">
+        <p>
+            Access to and use of the https://chat.eddaoust.com website (hereinafter referred to as ‘the Site’) are subject to this Legal Notice, the Privacy Policy and all applicable laws and/or regulations.
+
+            Connection, use and access to the Site imply full and unreserved acceptance of all the provisions of this Legal Notice.
+        </p>
+
+        <h2 class="text-2xl font-bold border-b-2 border-yellow">Publisher</h2>
+        <p>DAOUST Edmond</p>
+        <p>contact@eddaoust.com</p>
+
+        <h2 class="text-2xl font-bold border-b-2 border-yellow">Hosting</h2>
+        <p>Hostinger International Ltd.</p>
+        <p>61 Lordou Vironos str.</p>
+        <p>6023 Larnaca, Chypre</p>
+
+        <a href="{{ path('app_chat') }}" class="btn btn-primary">Back</a>
+    </div>
+
+{% endblock %}

@@ -20,4 +20,16 @@ final class ChatController extends AbstractController
             'recentQuestions' => $recentQuestions,
         ]);
     }
+
+    #[Route('/legal', name: 'app_legal')]
+    public function legal(): Response
+    {
+        return $this->render('legal/index.html.twig');
+    }
+
+    #[Route('/gdpr', name: 'app_gdpr')]
+    public function gdpr(): Response
+    {
+        return $this->render('legal/gdpr.html.twig');
+    }
 }

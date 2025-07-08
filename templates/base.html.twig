@@ -8,13 +8,13 @@
         {% set pageTitle %}{% block title %}{% endblock %}{% endset %}
         {% set description = 'Discuss with the Starter Story youtube channel. This educational project aims to teach the basics of RAG architecture in PHP.' %}
 
-        <title>{{ pageTitle }}| By Ed.</title>
+        <title>{{ pageTitle }} | By Ed.</title>
         <meta name="description" content="{{ description }}">
 
         <!-- Facebook Meta Tags -->
         <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
         <meta property="og:type" content="website">
-        <meta property="og:title" content="{{ pageTitle }}| By Ed.">
+        <meta property="og:title" content="{{ pageTitle }} | By Ed.">
         <meta property="og:description" content="{{ description }}">
         <meta property="og:image" content="{{ absolute_url(asset('logo-black.png')) }}">
         <meta property="og:image:secure_url" content="{{ absolute_url(asset('logo-black.png')) }}">
@@ -22,7 +22,7 @@
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="{{ pageTitle }}| By Ed.">
+        <meta name="twitter:title" content="{{ pageTitle }} | By Ed.">
         <meta name="twitter:description" content="{{ description }}">
         <meta name="twitter:image" content="{{ absolute_url(asset('logo-black.png')) }}">
 
