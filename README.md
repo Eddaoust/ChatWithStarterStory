@@ -140,13 +140,6 @@ bin/console tailwind:build
 bin/console tailwind:build --watch
 ```
 
-## 📝 Things To Do
-- [ ] **Memory issue**: Improve memory consumption when creating transcription chunks and embeddings.
-- [ ] **Testing**: Implement PHPStan and some basic unit tests.
-- [ ] **Chat Question**: Make side questions clickable.
-- [ ] **Predefined question**: Implement predefined question buttons.
-- [ ] **Rate Limiting**: Implement rate limiting using the Rate Limiter component.
-
 ## 📄 License
 
 This project is for testing and educational purposes. Please ensure compliance with YouTube's Terms of Service and OpenAI's usage policies when using this application.

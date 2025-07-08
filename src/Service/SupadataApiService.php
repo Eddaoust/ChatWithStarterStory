@@ -38,7 +38,7 @@ class SupadataApiService
             'query' => [
                 'videoId' => $videoId,
                 'lang' => $lang,
-                'chunkSize' => 500
+                'chunkSize' => 800
             ]
         ]);
 
