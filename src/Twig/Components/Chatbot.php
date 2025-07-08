@@ -11,7 +11,6 @@ use App\Repository\ChatQuestionRepository;
 use App\Service\RAGService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\UX\LiveComponent\{Attribute\AsLiveComponent,
     Attribute\LiveAction,
     Attribute\LiveProp,
@@ -40,7 +39,6 @@ final class Chatbot extends AbstractController
     public function __construct(
         private readonly RAGService $ragService,
         private readonly EntityManagerInterface $entityManager,
-        private readonly RequestStack $requestStack,
         private readonly ChatQuestionRepository $chatQuestionRepository,
     ) {
         $this->messages[] = [
@@ -71,7 +69,6 @@ final class Chatbot extends AbstractController
 
         $this->isLoading = true;
 
-        $chatQuestion->setUserIp($this->requestStack->getCurrentRequest()->getClientIp());
         $this->entityManager->persist($chatQuestion);
         $this->entityManager->flush();
         $this->pendingQuestion = $chatQuestion->getId();

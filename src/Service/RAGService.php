@@ -26,7 +26,7 @@ class RAGService
 
         return [
             'answer' => $response,
-            'videos' => str_starts_with($response, 'I don\'t know') ? [] : array_map(function($item) {
+            'videos' => str_starts_with($response, 'none') ? [] : array_map(function($item) {
                 $video = $item['video'];
                 $chunk = $item['relevantChunk'];
 
@@ -70,7 +70,7 @@ class RAGService
         Question :
         $question
 
-        Based on the above context, answer the question clearly and concisely. If the context does not allow you to answer, return “I don't know”..
+        Based on the above context, answer the question clearly and concisely. If the context does not allow you to answer, return “none”..
         PROMPT;
 
         return $chat->generateText($prompt);

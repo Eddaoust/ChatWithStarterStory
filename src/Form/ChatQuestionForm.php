@@ -24,8 +24,7 @@ class ChatQuestionForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => ChatQuestion::class,
-            'csrf_protection' => false
+            'data_class' => ChatQuestion::class
         ]);
     }
 }

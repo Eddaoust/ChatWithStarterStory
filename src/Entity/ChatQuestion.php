@@ -27,9 +27,6 @@ class ChatQuestion
     #[ORM\OneToOne(targetEntity: ChatResponse::class, mappedBy: 'question', cascade: ['persist', 'remove'])]
     private ?ChatResponse $response = null;
 
-    #[ORM\Column(type: Types::STRING, length: 255, nullable: true)]
-    private ?string $userIp = null;
-
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable;
@@ -80,17 +77,6 @@ class ChatQuestion
         }
 
         $this->response = $response;
-        return $this;
-    }
-
-    public function getUserIp(): ?string
-    {
-        return $this->userIp;
-    }
-
-    public function setUserIp(?string $userIp): self
-    {
-        $this->userIp = $userIp;
         return $this;
     }
 }
