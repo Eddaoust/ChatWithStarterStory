@@ -1,0 +1,6 @@
+framework:
+    rate_limiter:
+        chatbot_questions:
+            policy: 'fixed_window'
+            limit: 3
+            interval: '24 hour'

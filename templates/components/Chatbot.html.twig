@@ -52,6 +52,21 @@
 
     <!-- Input Area -->
     <div class="p-4 bg-base-100 border-t border-base-300">
+        {% if rateLimitError %}
+            <div class="alert alert-error mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{{ rateLimitError }}</span>
+            </div>
+        {% endif %}
+
+        <div class="flex items-center justify-between mb-2">
+            <div class="text-sm text-base-content/70">
+                Questions remaining: <span class="font-medium">{{ questionsRemaining }}</span>/3
+            </div>
+        </div>
+
         {{ form_start(form, {
             attr: {
                 'data-action': 'live#action:prevent',
@@ -62,10 +77,11 @@
             {{ form_widget(form.question, {
                 attr: {
                     'class': 'input input-bordered flex-grow',
-                    'placeholder': 'Ask a question...'
+                    'placeholder': rateLimitError ? 'Rate limit reached' : 'Ask a question...',
+                    'disabled': rateLimitError ? 'disabled' : false
                 }
             })}}
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" {{ rateLimitError ? 'disabled' : '' }}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                 </svg>

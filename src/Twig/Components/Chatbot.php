@@ -17,6 +17,8 @@ use Symfony\UX\LiveComponent\{Attribute\AsLiveComponent,
     ComponentWithFormTrait,
     DefaultActionTrait};
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 #[AsLiveComponent]
 final class Chatbot extends AbstractController
@@ -36,16 +38,35 @@ final class Chatbot extends AbstractController
     #[LiveProp]
     public ?int $pendingQuestion = null;
 
+    #[LiveProp]
+    public ?string $rateLimitError = null;
+
+    #[LiveProp]
+    public int $questionsRemaining = 3;
+
     public function __construct(
         private readonly RAGService $ragService,
         private readonly EntityManagerInterface $entityManager,
         private readonly ChatQuestionRepository $chatQuestionRepository,
+        private readonly RateLimiterFactoryInterface $chatbotQuestionsLimiter,
+        private readonly RequestStack $requestStack,
     ) {
         $this->messages[] = [
             'type' => 'bot',
             'content' => 'Hello! I\'m your Starter Story assistant. Ask me anything about Starter Story YouTube videos!',
             'videos' => []
         ];
+    }
+
+    public function mount(): void
+    {
+        if ($this->requestStack->getCurrentRequest()->hasSession()) {
+            $sessionId = $this->requestStack->getCurrentRequest()->getSession()->getId();
+            $limiter = $this->chatbotQuestionsLimiter->create($sessionId);
+
+            $currentState = $limiter->consume(0);
+            $this->questionsRemaining = $currentState->getRemainingTokens();
+        }
     }
 
     protected function instantiateForm(): FormInterface
@@ -61,6 +82,19 @@ final class Chatbot extends AbstractController
         /** @var ChatQuestion $chatQuestion */
         $chatQuestion = $this->getForm()->getData();
 
+        $sessionId = $this->requestStack->getCurrentRequest()->getSession()->getId();
+        $limiter = $this->chatbotQuestionsLimiter->create($sessionId);
+
+        $rateLimit = $limiter->consume();
+        if (!$rateLimit->isAccepted()) {
+            $this->rateLimitError = 'You have reached the maximum number of questions (3) for this session. Please try again later.';
+
+            return;
+        }
+
+        $this->rateLimitError = null;
+        $this->questionsRemaining = $rateLimit->getRemainingTokens();
+
         $this->messages[] = [
             'type' => 'user',
             'content' => $chatQuestion->getQuestion(),
@@ -74,6 +108,7 @@ final class Chatbot extends AbstractController
         $this->pendingQuestion = $chatQuestion->getId();
 
         $this->initialFormData = null;
+        $this->resetForm();
     }
 
     #[LiveAction]
