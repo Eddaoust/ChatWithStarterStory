@@ -18,6 +18,10 @@ A basic **Retrieval-Augmented Generation (RAG)** implementation for testing purp
 - [Supadata](https://supadata.ai/) API access (for YouTube data fetching)
 - [Youtube](https://console.cloud.google.com/) API key
 
+## 🖥️ Demo
+
+You can try a demo [here](https://chat.eddaoust.com/)
+
 ## 🛠️ Installation Setup
 
 ### 1. Clone the Repository
